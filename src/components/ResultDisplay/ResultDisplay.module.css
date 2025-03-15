@@ -1,0 +1,37 @@
+.container {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.result {
+  display: inline-block;
+  padding: 1rem 2rem;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
+  animation: pop 0.3s ease-out;
+}
+
+.placeholder {
+  font-size: 18px;
+  color: #666;
+  font-style: italic;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+} 

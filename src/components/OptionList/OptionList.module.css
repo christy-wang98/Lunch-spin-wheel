@@ -1,0 +1,182 @@
+.container {
+  width: 300px;
+  margin-left: 30px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+  font-size: 18px;
+}
+
+.optionList {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.colorIndicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.optionLabel {
+  flex-grow: 1;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.weightInfo {
+  width: 100%;
+  margin-top: 8px;
+  margin-left: 30px;
+}
+
+.percentBar {
+  height: 8px;
+  width: 100%;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.percentFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.weightControl {
+  display: flex;
+  align-items: center;
+}
+
+.weightControl label {
+  margin-right: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.weightControl input {
+  width: 50px;
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.percentage {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  min-width: 45px;
+}
+
+.deleteButton {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.deleteButton:hover {
+  background-color: #e03333;
+}
+
+.addOptionForm {
+  margin-bottom: 20px;
+}
+
+.addOptionForm h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.formRow {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.formRow input[type="text"] {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.inputError {
+  border-color: #ff4444 !important;
+  background-color: #fff8f8;
+}
+
+.errorMessage {
+  color: #ff4444;
+  font-size: 12px;
+  margin-bottom: 10px;
+  padding: 4px;
+  background-color: #fff8f8;
+  border-radius: 4px;
+}
+
+.formRow input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.addButton, .resetButton {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.addButton:hover, .resetButton:hover {
+  background-color: #45a049;
+}
+
+.addButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.resetButton {
+  background-color: #ff9800;
+  margin-top: 10px;
+}
+
+.resetButton:hover {
+  background-color: #f57c00;
+} 
