@@ -7,15 +7,144 @@ interface OptionListProps {
   onOptionsChange: (options: WheelOption[]) => void;
 }
 
+// 预定义的颜色，高对比度且容易区分
+const predefinedColors = [
+  '#E53935', // 鲜红色
+  '#1E88E5', // 亮蓝色
+  '#43A047', // 草绿色
+  '#FFB300', // 琥珀色
+  '#6D4C41', // 棕色
+  '#00ACC1', // 青色
+  '#9C27B0', // 紫色 (只保留一种紫色)
+  '#F4511E', // 深橙色
+  '#3949AB', // 靛蓝色
+  '#039BE5', // 天蓝色
+  '#7CB342', // 酸橙色
+  '#C0CA33', // 酸黄色
+  '#FB8C00', // 橙色
+  '#D81B60', // 玫红色
+  '#009688', // 蓝绿色 (替换深紫罗兰色)
+  '#00897B', // 青绿色
+  '#546E7A', // 蓝灰色
+  '#FFC107', // 金黄色 (新增)
+  '#795548', // 褐色 (新增)
+  '#607D8B'  // 灰蓝色 (新增)
+];
+
 export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange }) => {
   // 在组件渲染时记录选项数据，便于调试
   useEffect(() => {
     console.log('OptionList 渲染选项:', options);
   }, [options]);
 
+  // 生成不重复的颜色
+  const generateUniqueColor = (): string => {
+    // 首先尝试从预定义颜色中找一个未使用的
+    const usedColors = options.map(opt => opt.color.toLowerCase());
+    
+    // 按照与现有颜色的差异排序预定义颜色
+    const availableColors = predefinedColors
+      .filter(color => !usedColors.includes(color.toLowerCase()))
+      .sort((colorA, colorB) => {
+        // 计算与已使用颜色的最小差异
+        const minDiffA = getMinColorDifference(colorA, usedColors);
+        const minDiffB = getMinColorDifference(colorB, usedColors);
+        // 返回差异大的颜色优先
+        return minDiffB - minDiffA;
+      });
+    
+    if (availableColors.length > 0) {
+      // 选择差异最大的颜色
+      return availableColors[0];
+    }
+    
+    // 如果所有预定义颜色都用完了，生成随机颜色
+    // 并尝试确保它与现有颜色有足够差异
+    let newColor: string;
+    let maxDiff = 0;
+    let bestColor = '';
+    const attempts = 20; // 尝试20次随机颜色
+    
+    for (let i = 0; i < attempts; i++) {
+      newColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      const diff = getMinColorDifference(newColor, usedColors);
+      
+      if (diff > maxDiff) {
+        maxDiff = diff;
+        bestColor = newColor;
+      }
+    }
+    
+    return bestColor || '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+  };
+
+  // 计算两个颜色之间的差异值
+  const getColorDifference = (color1: string, color2: string): number => {
+    // 将十六进制颜色转换为RGB
+    const rgb1 = hexToRgb(color1);
+    const rgb2 = hexToRgb(color2);
+    
+    if (!rgb1 || !rgb2) return 0;
+    
+    // 计算RGB值的差异
+    const rDiff = Math.abs(rgb1.r - rgb2.r);
+    const gDiff = Math.abs(rgb1.g - rgb2.g);
+    const bDiff = Math.abs(rgb1.b - rgb2.b);
+    
+    // 返回差异的平方和（欧几里得距离的平方）
+    return rDiff * rDiff + gDiff * gDiff + bDiff * bDiff;
+  };
+
+  // 计算一个颜色与颜色数组中所有颜色的最小差异
+  const getMinColorDifference = (color: string, colors: string[]): number => {
+    if (colors.length === 0) return 1000000; // 如果没有颜色，返回一个大值
+    
+    return Math.min(...colors.map(c => getColorDifference(color, c)));
+  };
+
+  // 将十六进制颜色转换为RGB对象
+  const hexToRgb = (hex: string): {r: number, g: number, b: number} | null => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  };
+
+  // 重新分配所有选项颜色
+  const reassignAllColors = () => {
+    // 创建一个可用颜色的副本
+    const availableColors = [...predefinedColors];
+    
+    // 打乱颜色数组，确保随机性
+    for (let i = availableColors.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [availableColors[i], availableColors[j]] = [availableColors[j], availableColors[i]];
+    }
+    
+    // 为每个选项分配一个新颜色
+    const updatedOptions = options.map((option, index) => {
+      // 为每个选项选择一个颜色，尽量避免相邻选项颜色相似
+      let newColor;
+      
+      // 如果还有预定义颜色，使用它
+      if (index < availableColors.length) {
+        newColor = availableColors[index];
+      } else {
+        // 如果预定义颜色用完了，生成一个随机颜色
+        newColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      }
+      
+      return { ...option, color: newColor };
+    });
+    
+    onOptionsChange(updatedOptions);
+  };
+
   const [newOption, setNewOption] = useState<Partial<WheelOption>>({
     label: '',
-    color: '#' + Math.floor(Math.random() * 16777215).toString(16), // 随机颜色
+    color: generateUniqueColor(),
     weight: 1
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -101,7 +230,7 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
     const option: WheelOption = {
       id: newId,
       label: newOption.label,
-      color: newOption.color || '#' + Math.floor(Math.random() * 16777215).toString(16),
+      color: newOption.color || generateUniqueColor(),
       weight: newOption.weight || 1
     };
     
@@ -109,7 +238,7 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
     onOptionsChange([...options, option]);
     setNewOption({
       label: '',
-      color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+      color: generateUniqueColor(),
       weight: 1
     });
   };
@@ -243,12 +372,22 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
         </button>
       </div>
       
-      <button 
-        className={styles.resetButton}
-        onClick={handleResetWeights}
-      >
-        重置所有权重
-      </button>
+      <div className={styles.buttonGroup}>
+        <button 
+          className={styles.resetButton}
+          onClick={handleResetWeights}
+        >
+          重置所有权重
+        </button>
+        
+        <button 
+          className={styles.colorButton}
+          onClick={reassignAllColors}
+          title="重新分配所有选项的颜色，使其更加易于区分"
+        >
+          重新分配颜色
+        </button>
+      </div>
     </div>
   );
 }; 

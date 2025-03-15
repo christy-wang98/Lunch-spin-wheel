@@ -6,14 +6,14 @@ import './App.css';
 
 // 初始默认选项
 const defaultOptions: WheelOption[] = [
-  { id: '1', label: '中餐', color: '#e74c3c', weight: 1 },
-  { id: '2', label: '西餐', color: '#8e44ad', weight: 1 },
-  { id: '3', label: '日料', color: '#3498db', weight: 1 },
-  { id: '4', label: '韩餐', color: '#9b59b6', weight: 1 },
-  { id: '5', label: '快餐', color: '#2ecc71', weight: 1 },
-  { id: '6', label: '烧烤', color: '#e67e22', weight: 1 },
-  { id: '7', label: '便当', color: '#f1c40f', weight: 1 },
-  { id: '8', label: '火锅', color: '#7f8c8d', weight: 1 }
+  { id: '1', label: '中餐', color: '#E53935', weight: 1 },
+  { id: '2', label: '西餐', color: '#1E88E5', weight: 1 },
+  { id: '3', label: '日料', color: '#43A047', weight: 1 },
+  { id: '4', label: '韩餐', color: '#FB8C00', weight: 1 },
+  { id: '5', label: '快餐', color: '#00ACC1', weight: 1 },
+  { id: '6', label: '烧烤', color: '#F4511E', weight: 1 },
+  { id: '7', label: '便当', color: '#FFC107', weight: 1 },
+  { id: '8', label: '火锅', color: '#9C27B0', weight: 1 }
 ];
 
 function App() {
@@ -123,45 +123,47 @@ function App() {
       <h1 className="title">午餐大转盘</h1>
       
       <div className="content">
-        <SpinWheel 
-          options={options} 
-          onSpinEnd={handleSpinEnd} 
-        />
+        <div className="left-column">
+          <SpinWheel 
+            options={options} 
+            onSpinEnd={handleSpinEnd} 
+          />
+          
+          {selectedOption && (
+            <div className="result">
+              <h2>今天吃这个！</h2>
+              <div 
+                className="selected-option"
+                style={{ backgroundColor: selectedOption.color }}
+              >
+                {selectedOption.label}
+              </div>
+            </div>
+          )}
+          
+          <div className="buttons-container">
+            <button
+              className="reset-button"
+              onClick={resetToDefaults}
+              title="重置所有选项为默认值"
+            >
+              重置所有选项
+            </button>
+            
+            <button
+              className="force-reset-button"
+              onClick={forceReset}
+              title="清除所有数据并刷新页面"
+            >
+              强制重置并刷新
+            </button>
+          </div>
+        </div>
         
         <OptionList 
           options={options}
           onOptionsChange={handleOptionsChange}
         />
-      </div>
-      
-      {selectedOption && (
-        <div className="result">
-          <h2>今天吃这个！</h2>
-          <div 
-            className="selected-option"
-            style={{ backgroundColor: selectedOption.color }}
-          >
-            {selectedOption.label}
-          </div>
-        </div>
-      )}
-      
-      <div className="buttons-container">
-        <button
-          className="reset-button"
-          onClick={resetToDefaults}
-          title="重置所有选项为默认值"
-        >
-          重置所有选项
-        </button>
-        
-        <button
-          className="force-reset-button"
-          onClick={forceReset}
-          title="清除所有数据并刷新页面"
-        >
-          强制重置并刷新
-        </button>
       </div>
     </div>
   );
