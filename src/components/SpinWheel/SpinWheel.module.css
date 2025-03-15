@@ -58,11 +58,11 @@
 
 .pointer {
   position: absolute;
-  bottom: -15px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
-  width: 25px;
-  height: 35px;
+  width: 30px;
+  height: 40px;
   background-color: #ff4444;
   clip-path: polygon(50% 0, 0 100%, 100% 100%);
   z-index: 40;

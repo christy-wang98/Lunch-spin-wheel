@@ -15,37 +15,61 @@
   font-size: 18px;
 }
 
-.optionList {
-  max-height: 300px;
-  overflow-y: auto;
+.noOptions {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px 0;
+}
+
+.optionsTable {
+  width: 100%;
+  border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.optionItem {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 10px 0;
+.optionsTable th {
+  text-align: left;
+  padding: 8px 4px;
+  border-bottom: 2px solid #eee;
+  font-size: 14px;
+  color: #666;
+}
+
+.optionRow {
   border-bottom: 1px solid #eee;
+}
+
+.optionRow td {
+  padding: 8px 4px;
+  vertical-align: middle;
 }
 
 .colorIndicator {
   width: 20px;
   height: 20px;
   border-radius: 4px;
-  margin-right: 10px;
+  margin: 0 auto;
 }
 
-.optionLabel {
-  flex-grow: 1;
-  font-size: 16px;
-  margin-right: 10px;
+.labelCell {
+  font-weight: normal;
+  text-align: left;
 }
 
-.weightInfo {
-  width: 100%;
-  margin-top: 8px;
-  margin-left: 30px;
+.weightCell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.weightInput {
+  width: 50px;
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
 }
 
 .percentBar {
@@ -53,7 +77,6 @@
   width: 100%;
   background-color: #f0f0f0;
   border-radius: 4px;
-  margin-bottom: 8px;
   overflow: hidden;
 }
 
@@ -61,26 +84,6 @@
   height: 100%;
   border-radius: 4px;
   transition: width 0.3s ease;
-}
-
-.weightControl {
-  display: flex;
-  align-items: center;
-}
-
-.weightControl label {
-  margin-right: 5px;
-  font-size: 14px;
-  color: #666;
-}
-
-.weightControl input {
-  width: 50px;
-  padding: 4px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  text-align: center;
-  margin-right: 10px;
 }
 
 .percentage {
