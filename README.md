@@ -145,3 +145,40 @@ export default tseslint.config({
   },
 })
 ```
+
+## Google Maps API 使用说明
+
+本应用使用 Google Maps Platform 提供的以下服务：
+- Maps JavaScript API：显示地图
+- Places API：搜索周边餐厅
+- Geocoding API：地址解析
+
+为了优化API使用和控制成本：
+1. 所有API请求都有30分钟的缓存
+2. 实现了请求限流机制：
+   - Maps API: 每分钟最多50次请求
+   - Places API: 每分钟最多30次请求
+   - Geocoding API: 每分钟最多20次请求
+
+## 项目结构
+
+```
+src/
+  ├── components/         # 组件目录
+  │   ├── SpinWheel/     # 转盘组件
+  │   ├── OptionList/    # 选项列表组件
+  │   └── MapView/       # 地图视图组件
+  ├── utils/             # 工具函数
+  │   ├── cacheService.ts    # 缓存服务
+  │   ├── rateLimiter.ts    # 请求限流服务
+  │   └── mapService.ts     # 地图服务
+  └── App.tsx            # 应用入口
+```
+
+## 贡献指南
+
+欢迎提交 Issue 和 Pull Request。
+
+## 许可证
+
+MIT
