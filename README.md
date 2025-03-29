@@ -1,184 +1,151 @@
-# 午餐大转盘 (Lunch Spin Wheel)
+# Lunch Spin Wheel 午餐转盘
 
-这是一个帮助用户随机选择午餐的趣味工具。使用React + TypeScript开发，提供简单直观的用户界面。
+A fun and interactive web application that helps you and your team decide where to eat for lunch. Spin the wheel and let fate decide!
 
-## 功能特点
+一个有趣的互动式网页应用，帮助您和团队决定午餐去哪里吃。转动转盘，让命运为您做决定！
 
-- 可视化转盘界面，展示不同的午餐选项
-- 随机转动功能，带有平滑的动画效果
-- 结果展示区域，清晰显示最终选中的午餐
-- 支持自定义午餐选项，可调整选项权重
-- 集成高德地图，搜索附近餐厅并添加到转盘
-- 基于位置的餐厅推荐，帮助用户快速决定
-- 显示餐厅详细信息，包括地址、距离等
-- 响应式设计，适配各种屏幕尺寸
+![Lunch Spin Wheel](screenshot.png)
 
-## 技术栈
+## 🌟 Features 功能特点
 
-- React 18
-- TypeScript
-- Vite
-- CSS Modules
-- 高德地图JavaScript API
+- **Customizable Options**: Add, edit or remove lunch options with custom colors and weights
+- **可自定义选项**: 添加、编辑或删除午餐选项，自定义颜色和权重
 
-## 开发环境设置
+- **Interactive Spin Wheel**: Beautiful animation with sound effects and result highlighting
+- **互动式转盘**: 精美动画，配有音效和结果高亮显示
 
-1. 克隆项目
-```bash
-git clone [项目地址]
+- **Google Maps Integration**: Search for nearby restaurants and add them directly to your wheel
+- **Google地图集成**: 搜索附近餐厅并直接添加到转盘中
+
+- **Save Preferences**: Your options are automatically saved to local storage
+- **保存偏好**: 您的选项会自动保存到本地存储中
+
+- **Responsive Design**: Works on desktops, tablets and mobile devices
+- **响应式设计**: 适用于桌面电脑、平板和移动设备
+
+## 🌍 Versions 版本说明
+
+This project has two main versions designed for different regions:
+
+本项目有两个主要版本，针对不同区域设计：
+
+### 🇨🇦 Canada Version (Branch: `canada`)
+
+- English UI
+- Google Maps integration for North America
+- Distance shown in kilometers
+- Optimized for Canadian/North American restaurants
+
+### 🇨🇳 China Version (Branch: `china`)
+
+- Chinese UI (中文界面)
+- Alternative maps API for China region
+- Compatible with Chinese address formats
+- Optimized for Chinese restaurants and cuisine types
+
+## 🚀 Getting Started 开始使用
+
+### Prerequisites 前提条件
+
+- Node.js 14+ and npm
+- Google Maps API key (for Canada version)
+
+### Installation 安装步骤
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/christy-wang98/Lunch-spin-wheel.git
+   cd lunch-spin-wheel
+   ```
+
+2. Switch to your desired version:
+   ```
+   git checkout canada   # For Canada version
+   # OR
+   git checkout china    # For China version
+   ```
+
+3. Install dependencies:
+   ```
+   npm install
+   ```
+
+4. Create a `.env` file in the root directory with your API key:
+   ```
+   VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
+   ```
+
+5. Start the development server:
+   ```
+   npm run dev
+   ```
+
+6. Open `http://localhost:5173` in your browser
+
+## 🛠️ Development Guide 开发指南
+
+### Branch Structure 分支结构
+
+- `main`: Core shared code
+- `canada`: Canada-specific version with English UI
+- `china`: China-specific version with Chinese UI
+
+### Working with Branches 使用分支
+
+To switch between versions:
+```
+git checkout canada   # Switch to Canada version
+git checkout china    # Switch to China version
 ```
 
-2. 安装依赖
-```bash
-npm install
+To merge changes from main to a specific branch:
+```
+git checkout china
+git merge main
+git push
 ```
 
-3. 配置高德地图API密钥
-创建`.env.local`文件，添加以下内容：
-```
-VITE_AMAP_KEY=您的高德地图JavaScript API密钥
-VITE_AMAP_SECRET=您的高德地图Web服务API密钥
-VITE_AMAP_VERSION=2.0
-```
-
-4. 启动开发服务器
-```bash
-npm run dev
-```
-
-## 功能说明
-
-### 基础功能
-- **转盘旋转**：点击转盘中心或"旋转"按钮开始旋转
-- **自定义选项**：在右侧面板添加、删除或修改选项
-- **权重调整**：为不同选项设置权重，影响其被选中的概率
-
-### 地图功能
-- **位置获取**：自动获取用户当前位置
-- **餐厅搜索**：根据关键词和距离搜索附近餐厅
-- **快速添加**：选择餐厅并一键添加到转盘选项中
-- **详细信息**：显示餐厅地址、距离等信息
-
-## 使用方法
-
-1. 进入应用后，系统会请求位置权限，建议允许以获得最佳体验
-2. 地图界面会显示您附近的餐厅，可以通过关键词筛选特定类型
-3. 选择喜欢的餐厅，点击"添加到转盘"按钮
-4. 在转盘界面旋转，随机选择一家餐厅
-5. 结果区域会显示选中餐厅的详细信息
-
-## 项目结构
+### Build for Production 构建生产版本
 
 ```
-src/
-├── components/        # 可复用组件
-│   ├── SpinWheel/     # 转盘组件
-│   ├── OptionList/    # 选项列表组件
-│   └── MapView/       # 地图视图组件
-├── types/             # TypeScript类型定义
-├── utils/             # 工具函数
-│   └── mapService.ts  # 高德地图服务封装
-└── App.tsx            # 应用入口
+npm run build
 ```
 
-## 获取高德地图API密钥
+The build output will be in the `dist` directory.
 
-1. 前往[高德开放平台](https://lbs.amap.com/)注册账号
-2. 创建应用并获取JavaScript API密钥
-3. 在应用中添加安全设置（Web服务API需要设置IP白名单）
+## 📱 Usage Examples 使用示例
 
-## 技术支持
+### Adding Custom Options 添加自定义选项
 
-如有问题或建议，请提交Issue或联系[维护者邮箱]
+1. Use the "Add New Option" section in the left sidebar
+2. Enter a name and choose a color
+3. Click "Add" to add it to your wheel
 
-# React + TypeScript + Vite
+### Using the Map to Find Restaurants 使用地图寻找餐厅
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. In the map section, you can search for nearby restaurants
+2. Select restaurants you're interested in
+3. Click "Add to Wheel" to add them as options
 
-Currently, two official plugins are available:
+### Adjusting Option Weight 调整选项权重
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Use the number input next to each option to change its weight
+2. Higher weights increase the probability of that option being selected
 
-## Expanding the ESLint configuration
+## 🤝 Contributing 贡献指南
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+欢迎贡献！请随时提交Pull Request。
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📄 License 许可证
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+本项目采用MIT许可证 - 详情请参阅LICENSE文件。
 
-## Google Maps API 使用说明
+## 📞 Contact 联系方式
 
-本应用使用 Google Maps Platform 提供的以下服务：
-- Maps JavaScript API：显示地图
-- Places API：搜索周边餐厅
-- Geocoding API：地址解析
+Christy Wang - christy.wang98@example.com
 
-为了优化API使用和控制成本：
-1. 所有API请求都有30分钟的缓存
-2. 实现了请求限流机制：
-   - Maps API: 每分钟最多50次请求
-   - Places API: 每分钟最多30次请求
-   - Geocoding API: 每分钟最多20次请求
-
-## 项目结构
-
-```
-src/
-  ├── components/         # 组件目录
-  │   ├── SpinWheel/     # 转盘组件
-  │   ├── OptionList/    # 选项列表组件
-  │   └── MapView/       # 地图视图组件
-  ├── utils/             # 工具函数
-  │   ├── cacheService.ts    # 缓存服务
-  │   ├── rateLimiter.ts    # 请求限流服务
-  │   └── mapService.ts     # 地图服务
-  └── App.tsx            # 应用入口
-```
-
-## 贡献指南
-
-欢迎提交 Issue 和 Pull Request。
-
-## 许可证
-
-MIT
+Project Link: [https://github.com/christy-wang98/Lunch-spin-wheel](https://github.com/christy-wang98/Lunch-spin-wheel)
