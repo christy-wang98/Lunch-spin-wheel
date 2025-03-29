@@ -16,6 +16,7 @@
   color: #333;
   text-align: left;
   font-weight: 600;
+  text-transform: none !important;
 }
 
 .mapControls {
@@ -222,22 +223,59 @@
 }
 
 .restaurantName {
-  margin: 0 0 5px 0;
-  font-size: 16px;
-  font-weight: bold;
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
   color: #333;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.restaurantName div {
+  display: flex;
+  gap: 4px;
+}
+
+.restaurantName span {
+  margin-left: 6px;
+}
+
+/* 热门菜品样式 */
+.popularDishes {
+  margin: 0.3rem 0;
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+}
+
+.popularLabel {
+  color: #ff5722;
+  font-weight: 600;
+  margin-right: 5px;
+  text-transform: none !important;
+}
+
+.dishTag {
+  color: #555;
+  display: inline;
 }
 
 .restaurantAddress {
   margin: 0 0 5px 0;
   font-size: 12px;
-  color: #757575;
+  color: #616161;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 3px 0;
+  border-radius: 3px;
+  background-color: #f5f5f5;
+  padding-left: 5px;
+  font-weight: 500;
 }
 
 .restaurantMeta {
@@ -281,9 +319,10 @@
   padding: 2px 6px;
   margin-left: 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: normal;
   color: white;
+  vertical-align: middle;
 }
 
 .deliveryBadge {

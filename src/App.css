@@ -8,6 +8,21 @@ body {
   background-color: #f8f9fa;
 }
 
+/* 全局文本格式样式，确保文本不被转换 */
+h1, h2, h3, h4, h5, h6, 
+.title, 
+button, 
+select, 
+option, 
+label, 
+span, 
+p,
+div,
+th,
+td {
+  text-transform: none !important;
+}
+
 .app {
   max-width: 1600px;
   margin: 0 auto;
@@ -16,8 +31,14 @@ body {
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 25px;
+  color: #333;
+}
+
+/* 通用标题样式 - 确保所有标题使用一致的文本格式 */
+h1, h2, h3, h4, h5, h6, .title {
+  margin-bottom: 15px;
   color: #333;
 }
 
@@ -31,9 +52,9 @@ body {
 
 /* 左侧选项列表 */
 .left-sidebar {
-  flex: 0.8;
-  max-width: 280px;
-  min-width: 230px;
+  flex: 1;
+  max-width: 350px;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   order: 0;
@@ -206,4 +227,10 @@ body {
     max-width: 550px;
     width: 100%;
   }
+}
+
+/* Adjust text formatting for left sidebar buttons */
+.left-sidebar button {
+  text-transform: capitalize;
+  white-space: nowrap;
 } 

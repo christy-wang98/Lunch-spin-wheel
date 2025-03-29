@@ -25,6 +25,7 @@ export interface Restaurant {
   hasDelivery: boolean;
   hasDineIn: boolean;
   deliveryServices?: string[];
+  popularDishes?: string[]; // 热门菜品/推荐菜
 }
 
 // 加载Google Maps API
@@ -40,7 +41,7 @@ const loadGoogleMapsApi = (): Promise<void> => {
     console.log('API Key:', API_KEY ? '已设置' : '未设置');
 
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places,geometry&language=zh-CN&region=CN`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places,geometry&language=en&region=US`;
     script.async = true;
     script.defer = true;
     
@@ -251,16 +252,20 @@ export const searchNearbyRestaurants = async (
             restaurants.push({
               id: place.place_id!,
               name: place.name!,
-              address: details.formatted_address || '',
+              address: (details.formatted_address || '').replace('加拿大', ', Canada'),
               distance,
               location: [placeLocation.lng(), placeLocation.lat()],
-              category: place.types?.join(', ') || '',
+              category: place.types
+                ?.filter(type => !['restaurant', 'food', 'meal_takeaway', 'meal_delivery', 'point_of_interest', 'establishment'].includes(type))
+                .join(', ') || '',
               rating: place.rating,
               photos: place.photos?.map((photo: google.maps.places.PlacePhoto) => photo.getUrl({ maxWidth: 400 })) || [],
               priceLevel: place.price_level,
               hasDelivery: place.business_status === 'OPERATIONAL',
               hasDineIn: place.business_status === 'OPERATIONAL',
-              deliveryServices: [] // 这个信息需要通过其他API获取
+              deliveryServices: [], // 这个信息需要通过其他API获取
+              // 添加模拟的热门菜品数据 - 根据餐厅名称生成不同的菜品
+              popularDishes: getPopularDishes(place.name || '')
             });
           } catch (error) {
             console.error('Failed to get place details:', error);
@@ -360,4 +365,62 @@ export const filterRestaurants = (
     
     return matchKeyword && matchCategory;
   });
+};
+
+/**
+ * 根据餐厅名称生成模拟的热门菜品数据
+ * @param restaurantName 餐厅名称
+ * @returns 热门菜品列表
+ */
+const getPopularDishes = (restaurantName: string): string[] => {
+  // 根据餐厅名称的第一个字符来选择不同的菜品集合
+  const firstChar = restaurantName.charAt(0).toLowerCase();
+  
+  const dishSets: {[key: string]: string[]} = {
+    'a': ['Avocado Toast', 'Apple Pie', 'Alfredo Pasta'],
+    'b': ['Beef Burger', 'BBQ Ribs', 'Banana Split'],
+    'c': ['Chicken Parm', 'Caesar Salad', 'Cheesecake'],
+    'd': ['Duck Confit', 'Dim Sum', 'Devil\'s Food Cake'],
+    'e': ['Eggs Benedict', 'Eggplant Parmesan', 'Eclairs'],
+    'f': ['Fish & Chips', 'Fettuccine', 'French Toast'],
+    'g': ['Grilled Salmon', 'Garlic Bread', 'Greek Salad'],
+    'h': ['Hawaiian Pizza', 'Hot Wings', 'Honey Garlic Ribs'],
+    'i': ['Italian Sub', 'Ice Cream Sundae', 'Irish Stew'],
+    'j': ['Jambalaya', 'Jerk Chicken', 'Japanese Curry'],
+    'k': ['Korean BBQ', 'Kebabs', 'Key Lime Pie'],
+    'l': ['Lobster Roll', 'Lasagna', 'Lemon Chicken'],
+    'm': ['Margherita Pizza', 'Mushroom Risotto', 'Miso Soup'],
+    'n': ['Nachos', 'New York Strip', 'Noodle Soup'],
+    'o': ['Onion Rings', 'Oysters', 'Orange Chicken'],
+    'p': ['Pad Thai', 'Pepperoni Pizza', 'Pho'],
+    'q': ['Quesadilla', 'Quiche', 'Quinoa Bowl'],
+    'r': ['Ramen', 'Ribeye Steak', 'Ravioli'],
+    's': ['Sushi', 'Spaghetti', 'Shrimp Scampi'],
+    't': ['Tacos', 'Tiramisu', 'Tandoori Chicken'],
+    'u': ['Udon Noodles', 'Unagi Don', 'Ultimate Nachos'],
+    'v': ['Veal Parm', 'Vegetable Curry', 'Vanilla Milkshake'],
+    'w': ['Waffles', 'Wings', 'Wagyu Beef'],
+    'x': ['Xavier Steak', 'Xmas Pudding', 'Xacuti Curry'],
+    'y': ['Yellow Curry', 'Yorkshire Pudding', 'Yakitori'],
+    'z': ['Ziti', 'Zabaglione', 'Zucchini Fritters']
+  };
+
+  // 默认菜品集合
+  const defaultDishes = ['House Special', 'Chef\'s Recommendation', 'Customer Favorite'];
+  
+  // 获取与餐厅名称首字母对应的菜品集合，如果没有则使用默认菜品集合
+  const dishes = dishSets[firstChar] || defaultDishes;
+  
+  // 随机选择2-3个菜品返回
+  const count = Math.floor(Math.random() * 2) + 2; // 2到3个菜品
+  const selectedDishes: string[] = [];
+  
+  // 随机选择不重复的菜品
+  while (selectedDishes.length < count && dishes.length > 0) {
+    const index = Math.floor(Math.random() * dishes.length);
+    selectedDishes.push(dishes[index]);
+    dishes.splice(index, 1); // 移除已选的菜品，避免重复
+  }
+  
+  return selectedDishes;
 }; 

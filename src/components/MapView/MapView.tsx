@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { WheelOption } from '../../types/wheel';
+import { WheelOption } from '../../types/wheelOption';
 import { 
   initMap, 
   MapInstance, 
@@ -9,12 +9,15 @@ import {
   filterRestaurants
 } from '../../utils/mapService';
 import styles from './MapView.module.css';
+import { useTranslation } from 'react-i18next';
+import { SpinWheelItem } from '../../types/restaurant';
 
 interface MapViewProps {
   onAddRestaurants: (restaurants: WheelOption[]) => void;
 }
 
 const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
+  const { t } = useTranslation();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<MapInstance | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -26,12 +29,12 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [selectedRestaurants, setSelectedRestaurants] = useState<Restaurant[]>([]);
   const [searchRadius, setSearchRadius] = useState<number>(1000);
-  const [searchKeyword, setSearchKeyword] = useState<string>('餐厅');
+  const [searchKeyword, setSearchKeyword] = useState<string>('restaurant');
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
   const [radiusCircle, setRadiusCircle] = useState<google.maps.Circle | null>(null);
   const [diningMode, setDiningMode] = useState<'all' | 'dineIn' | 'delivery'>('all');
 
-  // 初始化地图
+  // Initialize map
   useEffect(() => {
     if (!mapContainerRef.current || mapLoaded) return;
 
@@ -46,14 +49,14 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
         setMapInstance(instance);
         setMapLoaded(true);
         
-        // 获取当前位置
+        // Get current location
         try {
           console.log('Getting current location...');
           const location = await getCurrentLocation(instance);
           console.log('Location received:', location);
           setCurrentLocation(location);
           
-          // 添加初始圆形范围
+          // Add initial radius circle
           const circle = new google.maps.Circle({
             map: instance.map,
             center: { lat: location.position[1], lng: location.position[0] },
@@ -66,7 +69,7 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
           });
           setRadiusCircle(circle);
           
-          // 搜索附近餐厅
+          // Search nearby restaurants
           console.log('Searching nearby restaurants...');
           const nearbyRestaurants = await searchNearbyRestaurants(
             instance,
@@ -79,20 +82,20 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
         } catch (locationError: any) {
           console.error('Location error:', locationError);
           if (locationError.message.includes('permission')) {
-            setError('请在浏览器设置中允许访问位置信息，然后刷新页面重试');
+            setError('Please allow location access in your browser settings and refresh the page');
           } else if (locationError.message.includes('unavailable')) {
-            setError('无法获取位置信息，请检查设备位置服务是否开启');
+            setError('Location information unavailable. Please check if location services are enabled');
           } else if (locationError.message.includes('timeout')) {
-            setError('获取位置超时，请检查网络连接并刷新页面重试');
+            setError('Location request timed out. Please check your connection and refresh the page');
           } else {
-            setError(`无法获取位置：${locationError.message}`);
+            setError(`Unable to get location: ${locationError.message}`);
           }
         }
         
         setLoading(false);
       } catch (mapError: any) {
         console.error('Map initialization error:', mapError);
-        setError(`地图加载失败：${mapError.message}`);
+        setError(`Map loading failed: ${mapError.message}`);
         setLoading(false);
       }
     };
@@ -100,7 +103,7 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
     initializeMap();
   }, [mapLoaded, searchRadius, searchKeyword]);
 
-  // 修改餐厅筛选逻辑
+  // Filter restaurants by dining mode
   const filterRestaurantsByMode = (restaurants: Restaurant[]) => {
     switch (diningMode) {
       case 'dineIn':
@@ -112,7 +115,7 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
     }
   };
 
-  // 修改搜索结果处理
+  // Handle search results
   const handleSearch = async () => {
     if (!mapInstance || !currentLocation) return;
     
@@ -131,37 +134,37 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
       setRestaurants(filteredRestaurants);
       setLoading(false);
     } catch (searchError) {
-      console.error('搜索餐厅失败:', searchError);
-      setError('搜索餐厅失败，请稍后重试');
+      console.error('Restaurant search failed:', searchError);
+      setError('Restaurant search failed. Please try again later');
       setLoading(false);
     }
   };
 
-  // 将餐厅添加到选择列表
+  // Add restaurant to selection list
   const handleSelectRestaurant = (restaurant: Restaurant) => {
     if (selectedRestaurants.some(r => r.id === restaurant.id)) {
-      // 如果已选择，则取消选择
+      // If already selected, unselect it
       setSelectedRestaurants(selectedRestaurants.filter(r => r.id !== restaurant.id));
     } else {
-      // 如果未选择，则添加到选择列表
+      // If not selected, add to selection list
       setSelectedRestaurants([...selectedRestaurants, restaurant]);
     }
   };
 
-  // 将选择的餐厅添加到转盘选项
+  // Add selected restaurants to wheel options
   const handleAddToWheel = () => {
     if (selectedRestaurants.length === 0) {
-      setError('请至少选择一家餐厅');
+      setError('Please select at least one restaurant');
       return;
     }
 
-    // 将餐厅转换为转盘选项格式
+    // Convert restaurants to wheel option format
     const wheelOptions: WheelOption[] = selectedRestaurants.map(restaurant => ({
       id: restaurant.id,
       label: restaurant.name,
-      color: getRandomColor(), // 随机分配颜色
+      color: getRandomColor(), // Randomly assign color
       weight: 1,
-      // 添加额外信息
+      // Add additional information
       metadata: {
         address: restaurant.address,
         distance: restaurant.distance,
@@ -171,17 +174,17 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
       }
     }));
 
-    // 回调添加到转盘
+    // Callback to add to wheel
     onAddRestaurants(wheelOptions);
     
-    // 清空选择
+    // Clear selection
     setSelectedRestaurants([]);
     
-    // 显示成功消息
-    alert(`已将 ${wheelOptions.length} 家餐厅添加到转盘！`);
+    // Show success message
+    alert(`Added ${wheelOptions.length} restaurants to the wheel!`);
   };
 
-  // 生成随机颜色
+  // Generate random color
   const getRandomColor = (): string => {
     const colors = [
       '#E53935', '#1E88E5', '#43A047', '#FFB300', 
@@ -192,18 +195,18 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
-  // 更新搜索半径时的处理函数
+  // Handle radius change
   const handleRadiusChange = async (newRadius: number) => {
     setSearchRadius(newRadius);
     
-    // 更新圆形范围
+    // Update circle radius
     if (currentLocation && mapInstance) {
-      // 移除旧的圆形
+      // Remove old circle
       if (radiusCircle) {
         radiusCircle.setMap(null);
       }
       
-      // 创建新的圆形
+      // Create new circle
       const circle = new google.maps.Circle({
         map: mapInstance.map,
         center: { lat: currentLocation.position[1], lng: currentLocation.position[0] },
@@ -218,7 +221,7 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
       setRadiusCircle(circle);
 
       try {
-        // 搜索新半径范围内的餐厅
+        // Search restaurants in new radius
         const nearbyRestaurants = await searchNearbyRestaurants(
           mapInstance,
           currentLocation.position,
@@ -228,14 +231,14 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
         
         setRestaurants(nearbyRestaurants);
         
-        // 弹出确认框
+        // Confirmation dialog
         if (nearbyRestaurants.length > 0) {
           const shouldAdd = window.confirm(
-            `在 ${newRadius >= 1000 ? (newRadius/1000).toFixed(1) + '公里' : newRadius + '米'} 范围内找到 ${nearbyRestaurants.length} 家餐厅，是否全部添加到转盘？`
+            `In ${newRadius >= 1000 ? (newRadius/1000).toFixed(1) + ' kilometers' : newRadius + ' meters'} range found ${nearbyRestaurants.length} restaurants, add all to wheel?`
           );
           
           if (shouldAdd) {
-            // 将所有餐厅添加到转盘
+            // Add all restaurants to wheel
             const wheelOptions: WheelOption[] = nearbyRestaurants.map(restaurant => ({
               id: restaurant.id,
               label: restaurant.name,
@@ -251,19 +254,19 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
             }));
             
             onAddRestaurants(wheelOptions);
-            alert(`已将 ${wheelOptions.length} 家餐厅添加到转盘！`);
+            alert(`${wheelOptions.length} restaurants added to wheel!`);
           }
         }
       } catch (error) {
-        console.error('搜索餐厅失败:', error);
-        setError('搜索餐厅失败，请稍后重试');
+        console.error('Restaurant search failed:', error);
+        setError('Restaurant search failed. Please try again later');
       }
     }
   };
 
   return (
     <div className={styles.mapView}>
-      <h3 className={styles.title}>附近餐厅</h3>
+      <h3 className={styles.title}>Nearby Restaurants</h3>
       
       <div className={styles.mapControls}>
         <div className={styles.searchGroup}>
@@ -271,7 +274,7 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
             type="text"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            placeholder="输入关键词，如'中餐'、'快餐'等"
+            placeholder={t('enterKeywords')}
             className={styles.searchInput}
           />
           
@@ -280,10 +283,10 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
             onChange={(e) => handleRadiusChange(Number(e.target.value))}
             className={styles.radiusSelect}
           >
-            <option value={500}>500米内</option>
-            <option value={1000}>1公里内</option>
-            <option value={2000}>2公里内</option>
-            <option value={5000}>5公里内</option>
+            <option value={500}>{t('within500m')}</option>
+            <option value={1000}>{t('within1km')}</option>
+            <option value={2000}>{t('within2km')}</option>
+            <option value={5000}>{t('within5km')}</option>
           </select>
 
           <select
@@ -291,9 +294,9 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
             onChange={(e) => setDiningMode(e.target.value as 'all' | 'dineIn' | 'delivery')}
             className={styles.modeSelect}
           >
-            <option value="all">全部餐厅</option>
-            <option value="dineIn">仅堂食</option>
-            <option value="delivery">仅外卖</option>
+            <option value="all">All Restaurants</option>
+            <option value="dineIn">Dine-In Only</option>
+            <option value="delivery">Delivery Only</option>
           </select>
           
           <button 
@@ -301,7 +304,7 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
             className={styles.searchButton}
             disabled={loading || !mapInstance || !currentLocation}
           >
-            {loading ? '搜索中...' : '搜索'}
+            {loading ? "Searching..." : "Search"}
           </button>
         </div>
         
@@ -311,7 +314,7 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
             className={styles.addButton}
             disabled={loading}
           >
-            添加 {selectedRestaurants.length} 家餐厅到转盘
+            Add {selectedRestaurants.length} Restaurant{selectedRestaurants.length !== 1 ? 's' : ''} to Wheel
           </button>
         )}
       </div>
@@ -326,12 +329,12 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
       ></div>
       
       <div className={styles.restaurantList}>
-        <h4>搜索结果 ({restaurants.length})</h4>
+        <h4>Search Results ({restaurants.length})</h4>
         
         {loading ? (
-          <div className={styles.loading}>加载中...</div>
+          <div className={styles.loading}>Loading...</div>
         ) : restaurants.length === 0 ? (
-          <div className={styles.empty}>未找到符合条件的餐厅</div>
+          <div className={styles.empty}>No restaurants found</div>
         ) : (
           <ul className={styles.restaurants}>
             {restaurants.map(restaurant => (
@@ -345,9 +348,21 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
                 <div className={styles.restaurantInfo}>
                   <h5 className={styles.restaurantName}>
                     {restaurant.name}
-                    {restaurant.hasDelivery && <span className={styles.deliveryBadge}>可外送</span>}
-                    {restaurant.hasDineIn && <span className={styles.dineInBadge}>可堂食</span>}
+                    <div>
+                      {restaurant.hasDelivery && <span className={styles.deliveryBadge}>Delivery</span>}
+                      {restaurant.hasDineIn && <span className={styles.dineInBadge}>Dine-In</span>}
+                    </div>
                   </h5>
+                  
+                  {restaurant.popularDishes && restaurant.popularDishes.length > 0 && (
+                    <div className={styles.popularDishes}>
+                      <span className={styles.popularLabel}>Popular Dishes:</span>
+                      <span className={styles.dishTag}>
+                        {restaurant.popularDishes.join(', ')}
+                      </span>
+                    </div>
+                  )}
+                  
                   <p className={styles.restaurantAddress}>{restaurant.address}</p>
                   <div className={styles.restaurantMeta}>
                     <span className={styles.distance}>{(restaurant.distance / 1000).toFixed(1)}km</span>
@@ -357,9 +372,6 @@ const MapView: React.FC<MapViewProps> = ({ onAddRestaurants }) => {
                         {(restaurant.rating % 1) > 0 ? '☆' : ''}
                         {Array(5 - Math.ceil(restaurant.rating || 0)).fill('☆').join('')}
                       </span>
-                    )}
-                    {restaurant.category && (
-                      <span className={styles.category}>{restaurant.category}</span>
                     )}
                   </div>
                 </div>

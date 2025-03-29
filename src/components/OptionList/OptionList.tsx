@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { WheelOption } from '../../types/wheelOption';
 import styles from './OptionList.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface OptionListProps {
   options: WheelOption[];
@@ -32,6 +33,7 @@ const predefinedColors = [
 ];
 
 export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange }) => {
+  const { t } = useTranslation();
   // 在组件渲染时记录选项数据，便于调试
   useEffect(() => {
     console.log('OptionList 渲染选项:', options);
@@ -154,6 +156,27 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
   
   // 计算各选项的精确百分比
   const calculateExactPercentages = () => {
+    // 先检查是否所有选项的权重都相同
+    const allWeightsEqual = options.every(option => (option.weight || 1) === (options[0]?.weight || 1));
+    
+    // 如果所有权重相同，直接平均分配百分比
+    if (allWeightsEqual && options.length > 0) {
+      const evenPercentage = Math.floor(100 / options.length);
+      const remainder = 100 - (evenPercentage * options.length);
+      
+      // 创建平均分配的结果
+      const result: Record<string, number> = {};
+      options.forEach((option, index) => {
+        // 将余数加到最后一个选项上
+        result[option.id] = index === options.length - 1 
+          ? evenPercentage + remainder 
+          : evenPercentage;
+      });
+      
+      return result;
+    }
+    
+    // 如果权重不同，则使用原来的计算逻辑
     const exactPercentages = options.map(option => {
       return {
         id: option.id,
@@ -269,18 +292,18 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>选项列表</h3>
+      <h3 className={styles.title}>Option List</h3>
       
       {options.length === 0 ? (
-        <p className={styles.noOptions}>暂无选项，请添加</p>
+        <p className={styles.noOptions}>{t('noOptions')} {t('pleaseAdd')}</p>
       ) : (
         <table className={styles.optionsTable}>
           <thead>
             <tr>
-              <th>颜色</th>
-              <th>名称</th>
-              <th>权重</th>
-              <th>操作</th>
+              <th>{t('color')}</th>
+              <th>{t('name')}</th>
+              <th>{t('weight')}</th>
+              <th>{t('operations')}</th>
             </tr>
           </thead>
           <tbody>
@@ -304,7 +327,7 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
                       borderRadius: '4px',
                       fontWeight: 'bold',
                     }}>
-                      {option.label || '未命名选项'}
+                      {option.label || t('unnamedOption')}
                     </span>
                   </td>
                   <td>
@@ -334,7 +357,7 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
                       className={styles.deleteButton}
                       onClick={() => handleDeleteOption(option.id)}
                     >
-                      删除
+                      {t('delete')}
                     </button>
                   </td>
                 </tr>
@@ -345,11 +368,11 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
       )}
       
       <div className={styles.addOptionForm}>
-        <h4>添加新选项</h4>
+        <h4>{t('addNewOption')}</h4>
         <div className={styles.formRow}>
           <input
             type="text"
-            placeholder="输入选项名称"
+            placeholder={t('enterOptionName')}
             value={newOption.label}
             onChange={handleLabelChange}
             className={errorMessage ? styles.inputError : ''}
@@ -368,7 +391,7 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
           onClick={handleAddOption}
           disabled={!newOption.label || !!errorMessage}
         >
-          添加
+          {t('add')}
         </button>
       </div>
       
@@ -377,15 +400,15 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
           className={styles.resetButton}
           onClick={handleResetWeights}
         >
-          重置所有权重
+          {t('resetAllWeights')}
         </button>
         
         <button 
           className={styles.colorButton}
           onClick={reassignAllColors}
-          title="重新分配所有选项的颜色，使其更加易于区分"
+          title={t('reassignColors')}
         >
-          重新分配颜色
+          {t('reassignColors')}
         </button>
       </div>
     </div>

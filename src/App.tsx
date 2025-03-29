@@ -4,24 +4,27 @@ import { OptionList } from './components/OptionList/OptionList';
 import MapView from './components/MapView/MapView';
 import { WheelOption } from './types/wheelOption';
 import './App.css';
+import { useTranslation } from 'react-i18next';
 
-// 初始默认选项
+// Default options for the wheel
 const defaultOptions: WheelOption[] = [
-  { id: '1', label: '中餐', color: '#E53935', weight: 1 },
-  { id: '2', label: '西餐', color: '#1E88E5', weight: 1 },
-  { id: '3', label: '日料', color: '#43A047', weight: 1 },
-  { id: '4', label: '韩餐', color: '#FB8C00', weight: 1 },
-  { id: '5', label: '快餐', color: '#00ACC1', weight: 1 },
-  { id: '6', label: '烧烤', color: '#F4511E', weight: 1 },
-  { id: '7', label: '便当', color: '#FFC107', weight: 1 },
-  { id: '8', label: '火锅', color: '#9C27B0', weight: 1 }
+  { id: '1', label: 'Chinese Food', color: '#E53935', weight: 1 },
+  { id: '2', label: 'Western Food', color: '#1E88E5', weight: 1 },
+  { id: '3', label: 'Japanese Food', color: '#43A047', weight: 1 },
+  { id: '4', label: 'Korean Food', color: '#FB8C00', weight: 1 },
+  { id: '5', label: 'Fast Food', color: '#00ACC1', weight: 1 },
+  { id: '6', label: 'BBQ', color: '#F4511E', weight: 1 },
+  { id: '7', label: 'Lunch Box', color: '#FFC107', weight: 1 },
+  { id: '8', label: 'Hot Pot', color: '#9C27B0', weight: 1 }
 ];
 
 function App() {
-  // 从本地存储加载选项，如果没有则使用默认选项
+  const { t } = useTranslation();
+
+  // Load options from localStorage, or use defaults if none exist
   const loadOptions = (): WheelOption[] => {
     try {
-      // 为了调试，先输出当前本地存储的内容
+      // For debugging, first output the current localStorage content
       const rawData = localStorage.getItem('wheelOptions');
       console.log('Raw localStorage data:', rawData);
       
@@ -30,7 +33,7 @@ function App() {
         return defaultOptions;
       }
       
-      // 严格验证每个选项
+      // Strictly validate each option
       const parsedOptions = JSON.parse(rawData);
       console.log('Parsed options:', parsedOptions);
       
@@ -44,7 +47,7 @@ function App() {
         return defaultOptions;
       }
       
-      // 检查每个选项是否有有效的属性
+      // Check if each option has valid properties
       const validOptions = parsedOptions.filter(option => {
         const isValid = 
           option && 
@@ -76,14 +79,14 @@ function App() {
     }
   };
 
-  // 重置为默认选项
+  // Reset to default options
   const resetToDefaults = () => {
     localStorage.removeItem('wheelOptions');
     setOptions([...defaultOptions]);
     console.log('Reset to default options');
   };
   
-  // 完全清除本地存储并强制刷新页面
+  // Clear localStorage and force page refresh
   const forceReset = () => {
     localStorage.clear();
     console.log('Cleared all localStorage data');
@@ -93,7 +96,7 @@ function App() {
   const [options, setOptions] = useState<WheelOption[]>(loadOptions);
   const [selectedOption, setSelectedOption] = useState<WheelOption | null>(null);
 
-  // 检查选项是否有效，如果无效则重置为默认值
+  // Check if options are valid, reset to defaults if invalid
   useEffect(() => {
     const hasInvalidOptions = options.some(option => 
       !option.label || typeof option.label !== 'string' || option.label.trim() === ''
@@ -105,7 +108,7 @@ function App() {
     }
   }, []);
 
-  // 当选项变化时，保存到本地存储
+  // Save options to localStorage when they change
   useEffect(() => {
     console.log('Saving options to localStorage:', options);
     localStorage.setItem('wheelOptions', JSON.stringify(options));
@@ -119,26 +122,45 @@ function App() {
     setOptions(newOptions);
   };
 
-  // 添加餐厅到选项
+  // Add restaurants to options
   const handleAddRestaurants = (restaurants: WheelOption[]) => {
-    // 检查是否有重复的选项
-    const newOptions = restaurants.filter(restaurant => 
+    // 处理餐厅地址中的中文
+    const processedRestaurants = restaurants.map(restaurant => {
+      if (restaurant.metadata && restaurant.metadata.address) {
+        return {
+          ...restaurant,
+          metadata: {
+            ...restaurant.metadata,
+            address: restaurant.metadata.address
+              .replace('加拿大', ', Canada')
+              .replace('加拿', '')
+              .replace('加', '')
+              .replace('拿', '')
+              .replace('大', '')
+          }
+        };
+      }
+      return restaurant;
+    });
+
+    // Check for duplicate options
+    const newOptions = processedRestaurants.filter(restaurant => 
       !options.some(option => option.label === restaurant.label)
     );
 
     if (newOptions.length > 0) {
       setOptions([...options, ...newOptions]);
     } else {
-      alert('所有餐厅都已经在选项中了！');
+      alert('All restaurants are already in the options list!');
     }
   };
 
   return (
     <div className="app">
-      <h1 className="title">午餐大转盘</h1>
+      <h1 className="title">Lunch Spin Wheel</h1>
       
       <div className="main-content">
-        {/* 左侧 - 选项列表 */}
+        {/* Left - Option List */}
         <div className="left-sidebar">
           <OptionList 
             options={options}
@@ -146,7 +168,7 @@ function App() {
           />
         </div>
         
-        {/* 中间 - 转盘和结果 */}
+        {/* Center - Spin Wheel and Results */}
         <div className="center-column">
           <SpinWheel 
             items={options} 
@@ -155,7 +177,7 @@ function App() {
           
           {selectedOption && (
             <div className="result">
-              <h2>今天吃这个！</h2>
+              <h2>Today's Choice</h2>
               <div 
                 className="selected-option"
                 style={{ backgroundColor: selectedOption.color }}
@@ -163,17 +185,23 @@ function App() {
                 {selectedOption.label}
               </div>
               
-              {/* 显示餐厅详细信息（如果有） */}
+              {/* Display restaurant details if available */}
               {selectedOption.metadata && (
                 <div className="restaurant-details">
                   {selectedOption.metadata.address && (
                     <p className="restaurant-address">
-                      地址：{selectedOption.metadata.address}
+                      {t('address')}: {selectedOption.metadata.address
+                        .replace('加拿大', ', Canada')
+                        .replace('加拿', '')
+                        .replace('加', '')
+                        .replace('拿', '')
+                        .replace('大', '')
+                      }
                     </p>
                   )}
                   {selectedOption.metadata.distance && (
                     <p className="restaurant-distance">
-                      距离：{(selectedOption.metadata.distance / 1000).toFixed(1)}km
+                      {t('distance')}: {(selectedOption.metadata.distance / 1000).toFixed(1)}km
                     </p>
                   )}
                 </div>
@@ -185,22 +213,22 @@ function App() {
             <button
               className="reset-button"
               onClick={resetToDefaults}
-              title="重置所有选项为默认值"
+              title="Reset All Options"
             >
-              重置所有选项
+              Reset All Options
             </button>
             
             <button
               className="force-reset-button"
               onClick={forceReset}
-              title="清除所有数据并刷新页面"
+              title="Force Reset and Refresh"
             >
-              强制重置并刷新
+              Force Reset and Refresh
             </button>
           </div>
         </div>
         
-        {/* 右侧 - 地图 */}
+        {/* Right - Map View */}
         <div className="right-sidebar">
           <MapView onAddRestaurants={handleAddRestaurants} />
         </div>

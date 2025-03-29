@@ -1,6 +1,7 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { WheelOption } from '../../types/wheelOption';
 import styles from './SpinWheel.module.css';
+import { useTranslation } from 'react-i18next';
 
 // 预定义一组彩虹色谱的颜色
 const predefinedColors = [
@@ -111,7 +112,12 @@ const calculateFontSize = (text: string, arcLength: number): number => {
   return baseFontSize;
 };
 
+// Update button text to include spaces and capitalize
+const resetAllWeightsButton = "Reset All Weights";
+const reassignColorsButton = "Reassign Colors";
+
 export const SpinWheel: React.FC<SpinWheelProps> = ({ items: options, onSpinEnd }) => {
+  const { t } = useTranslation();
   const wheelRef = useRef<HTMLDivElement>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
@@ -199,7 +205,7 @@ export const SpinWheel: React.FC<SpinWheelProps> = ({ items: options, onSpinEnd 
           <span 
             className={styles.singleLabel}
           >
-            {validOptions[0].label}
+            {t('addOption')}
           </span>
         </div>
         <div className={styles.pointer} />
@@ -208,7 +214,7 @@ export const SpinWheel: React.FC<SpinWheelProps> = ({ items: options, onSpinEnd 
           onClick={spinWheel}
           disabled={true}
         >
-          至少需要2个选项
+          {t('needTwoOptions')}
         </button>
       </div>
     );
@@ -322,7 +328,7 @@ export const SpinWheel: React.FC<SpinWheelProps> = ({ items: options, onSpinEnd 
         onClick={spinWheel}
         disabled={isSpinning || validOptions.length <= 1}
       >
-        {isSpinning ? '转动中...' : validOptions.length <= 1 ? '至少需要2个选项' : '开始转动'}
+        {isSpinning ? t('spinning') : validOptions.length <= 1 ? t('needTwoOptions') : t('spin')}
       </button>
     </div>
   );
