@@ -1,10 +1,12 @@
 .container {
-  width: 300px;
-  margin-left: 30px;
-  padding: 15px;
+  width: 100%;
+  padding: 20px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
@@ -13,6 +15,8 @@
   border-bottom: 1px solid #eee;
   color: #333;
   font-size: 18px;
+  text-align: left;
+  font-weight: 600;
 }
 
 .noOptions {
@@ -25,14 +29,15 @@
 .optionsTable {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
 
 .optionsTable th {
   text-align: left;
   padding: 8px 4px;
   border-bottom: 2px solid #eee;
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
 }
 
@@ -41,14 +46,14 @@
 }
 
 .optionRow td {
-  padding: 8px 4px;
+  padding: 6px 4px;
   vertical-align: middle;
 }
 
 .colorIndicator {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
   margin: 0 auto;
 }
 
@@ -57,51 +62,56 @@
   text-align: left;
 }
 
+.labelCell span {
+  padding: 2px 6px !important;
+  font-size: 13px !important;
+}
+
 .weightCell {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 5px;
+  gap: 4px;
 }
 
 .weightInput {
-  width: 50px;
-  padding: 4px;
+  width: 40px;
+  padding: 3px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 3px;
   text-align: center;
   background-color: white;
   color: #333;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .percentBar {
-  height: 8px;
+  height: 6px;
   width: 100%;
   background-color: #f0f0f0;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .percentFill {
   height: 100%;
-  border-radius: 4px;
+  border-radius: 3px;
   transition: width 0.3s ease;
 }
 
 .percentage {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   color: #333;
-  min-width: 45px;
+  min-width: 40px;
 }
 
 .deleteButton {
   background-color: #ff4444;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 4px 8px;
+  border-radius: 3px;
+  padding: 3px 6px;
   cursor: pointer;
   font-size: 12px;
 }
@@ -111,27 +121,29 @@
 }
 
 .addOptionForm {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .addOptionForm h4 {
   margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 16px;
+  margin-bottom: 8px;
+  font-size: 15px;
   color: #333;
+  text-align: left;
 }
 
 .formRow {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .formRow input[type="text"] {
   flex-grow: 1;
-  padding: 8px;
+  padding: 6px 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-right: 10px;
+  margin-right: 8px;
+  font-size: 13px;
 }
 
 .inputError {
@@ -142,15 +154,15 @@
 .errorMessage {
   color: #ff4444;
   font-size: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding: 4px;
   background-color: #fff8f8;
   border-radius: 4px;
 }
 
 .formRow input[type="color"] {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 0;
@@ -159,12 +171,12 @@
 
 .addButton, .resetButton {
   width: 100%;
-  padding: 8px;
+  padding: 6px 8px;
   border: none;
   border-radius: 4px;
   background-color: #4CAF50;
   color: white;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -189,17 +201,18 @@
 
 .buttonGroup {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-top: 10px;
+  margin-top: auto;
 }
 
 .resetButton, .colorButton {
   flex: 1;
-  padding: 8px;
+  padding: 6px 8px;
   border: none;
   border-radius: 4px;
   color: white;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }

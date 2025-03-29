@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SpinWheel } from './components/SpinWheel/SpinWheel';
 import { OptionList } from './components/OptionList/OptionList';
+import MapView from './components/MapView/MapView';
 import { WheelOption } from './types/wheel';
 import './App.css';
 
@@ -118,12 +119,35 @@ function App() {
     setOptions(newOptions);
   };
 
+  // 添加餐厅到选项
+  const handleAddRestaurants = (restaurants: WheelOption[]) => {
+    // 检查是否有重复的选项
+    const newOptions = restaurants.filter(restaurant => 
+      !options.some(option => option.label === restaurant.label)
+    );
+
+    if (newOptions.length > 0) {
+      setOptions([...options, ...newOptions]);
+    } else {
+      alert('所有餐厅都已经在选项中了！');
+    }
+  };
+
   return (
     <div className="app">
       <h1 className="title">午餐大转盘</h1>
       
-      <div className="content">
-        <div className="left-column">
+      <div className="main-content">
+        {/* 左侧 - 选项列表 */}
+        <div className="left-sidebar">
+          <OptionList 
+            options={options}
+            onOptionsChange={handleOptionsChange}
+          />
+        </div>
+        
+        {/* 中间 - 转盘和结果 */}
+        <div className="center-column">
           <SpinWheel 
             options={options} 
             onSpinEnd={handleSpinEnd} 
@@ -138,6 +162,22 @@ function App() {
               >
                 {selectedOption.label}
               </div>
+              
+              {/* 显示餐厅详细信息（如果有） */}
+              {selectedOption.metadata && (
+                <div className="restaurant-details">
+                  {selectedOption.metadata.address && (
+                    <p className="restaurant-address">
+                      地址：{selectedOption.metadata.address}
+                    </p>
+                  )}
+                  {selectedOption.metadata.distance && (
+                    <p className="restaurant-distance">
+                      距离：{(selectedOption.metadata.distance / 1000).toFixed(1)}km
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           )}
           
@@ -160,10 +200,10 @@ function App() {
           </div>
         </div>
         
-        <OptionList 
-          options={options}
-          onOptionsChange={handleOptionsChange}
-        />
+        {/* 右侧 - 地图 */}
+        <div className="right-sidebar">
+          <MapView onAddRestaurants={handleAddRestaurants} />
+        </div>
       </div>
     </div>
   );

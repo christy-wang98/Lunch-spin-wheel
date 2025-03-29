@@ -5,11 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  background-color: #f8f9fa;
 }
 
 .app {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
@@ -17,24 +17,53 @@ body {
 
 .title {
   font-size: 2.5rem;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
   color: #333;
 }
 
-.content {
+/* 主内容区域三列布局 */
+.main-content {
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 30px;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
 }
 
-.left-column {
+/* 左侧选项列表 */
+.left-sidebar {
+  flex: 0.8;
+  max-width: 280px;
+  min-width: 230px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 中间转盘区域 */
+.center-column {
+  flex: 1.2;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  max-width: 480px;
+  min-width: 340px;
 }
 
+/* 右侧地图区域 */
+.right-sidebar {
+  flex: 2.2;
+  max-width: 740px;
+  min-width: 440px;
+}
+
+/* 修改地图视图的样式适应右侧边栏 */
+.right-sidebar > div {
+  margin-top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* 结果区域样式 */
 .result {
   text-align: center;
   margin-top: 20px;
@@ -43,17 +72,18 @@ body {
 }
 
 .result h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
+  font-size: 22px;
+  margin-bottom: 12px;
   color: #333;
+  font-weight: 600;
 }
 
 .selected-option {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: bold;
   color: white;
-  padding: 15px 30px;
-  border-radius: 15px;
+  padding: 12px 25px;
+  border-radius: 12px;
   display: inline-block;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s;
@@ -75,7 +105,7 @@ body {
 .buttons-container {
   display: flex;
   gap: 15px;
-  margin-top: 10px;
+  margin-top: 15px;
   width: 100%;
   max-width: 400px;
   justify-content: center;
@@ -83,10 +113,10 @@ body {
 
 .reset-button,
 .force-reset-button {
-  padding: 10px 15px;
+  padding: 8px 15px;
   border: none;
   border-radius: 5px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }
@@ -116,4 +146,60 @@ body {
 .reset-button:active,
 .force-reset-button:active {
   transform: translateY(0);
+}
+
+.restaurant-details {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.restaurant-address,
+.restaurant-distance {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.restaurant-address {
+  font-style: italic;
+}
+
+/* 响应式布局 */
+@media (max-width: 1400px) {
+  .main-content {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .center-column {
+    order: -1; /* 确保转盘始终在顶部 */
+    margin-bottom: 20px;
+  }
+
+  .left-sidebar, 
+  .right-sidebar {
+    flex: 1 1 45%;
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-sidebar,
+  .center-column,
+  .right-sidebar {
+    max-width: 550px;
+    width: 100%;
+  }
 } 

@@ -2,7 +2,15 @@ export interface WheelOption {
   id: string;
   label: string;
   color: string;
-  weight?: number;
+  weight: number;
+  metadata?: {
+    address?: string;
+    distance?: number;
+    location?: [number, number];
+    category?: string;
+    rating?: number;
+    [key: string]: any;
+  };
 }
 
 export interface SpinWheelProps {
