@@ -22,22 +22,38 @@ export interface Restaurant {
   rating?: number; // 评分，满分5分
   photos?: string[]; // 照片URL列表
   priceLevel?: number; // 价格等级，1-4
+  hasDelivery: boolean;
+  hasDineIn: boolean;
+  deliveryServices?: string[];
 }
 
 // 加载Google Maps API
 const loadGoogleMapsApi = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     if (window.google && window.google.maps) {
+      console.log('Google Maps API 已加载');
       resolve();
       return;
     }
 
+    console.log('开始加载 Google Maps API...');
+    console.log('API Key:', API_KEY ? '已设置' : '未设置');
+
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places&language=${import.meta.env.VITE_APP_LOCALE || 'en'}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places,geometry&language=zh-CN&region=CN`;
     script.async = true;
     script.defer = true;
-    script.onerror = () => reject(new Error('Failed to load Google Maps API'));
-    script.onload = () => resolve();
+    
+    script.onerror = (error) => {
+      console.error('Google Maps API 加载失败:', error);
+      reject(new Error('Google Maps API 加载失败，请检查网络连接和API密钥设置'));
+    };
+    
+    script.onload = () => {
+      console.log('Google Maps API 加载成功');
+      resolve();
+    };
+    
     document.head.appendChild(script);
   });
 };
@@ -99,6 +115,8 @@ export const getCurrentLocation = (mapInstance: MapInstance): Promise<{
         const { latitude, longitude } = position.coords;
         const location: [number, number] = [longitude, latitude];
 
+        console.log('Successfully got location:', { latitude, longitude });
+
         // 创建标记
         new google.maps.Marker({
           position: { lat: latitude, lng: longitude },
@@ -127,11 +145,24 @@ export const getCurrentLocation = (mapInstance: MapInstance): Promise<{
         }
       },
       (error) => {
-        reject(new Error(`Failed to get location: ${error.message}`));
+        console.error('Geolocation error:', error);
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            reject(new Error('Location permission denied. Please enable location access in your browser settings.'));
+            break;
+          case error.POSITION_UNAVAILABLE:
+            reject(new Error('Location information is unavailable. Please check your device settings.'));
+            break;
+          case error.TIMEOUT:
+            reject(new Error('Location request timed out. Please try again.'));
+            break;
+          default:
+            reject(new Error(`Failed to get location: ${error.message}`));
+        }
       },
       {
         enableHighAccuracy: true,
-        timeout: 10000,
+        timeout: 30000, // 增加超时时间到30秒
         maximumAge: 0
       }
     );
@@ -172,9 +203,10 @@ export const searchNearbyRestaurants = async (
       location: { lat: position[1], lng: position[0] },
       radius,
       type: 'restaurant',
-      keyword: keywords,
-      rankBy: google.maps.places.RankBy.DISTANCE
+      keyword: keywords
     };
+
+    console.log('Searching for restaurants with params:', request);
 
     // 记录请求
     rateLimiter.logRequest('places');
@@ -188,6 +220,9 @@ export const searchNearbyRestaurants = async (
       results: google.maps.places.PlaceResult[] | null,
       status: google.maps.places.PlacesServiceStatus
     ) => {
+      console.log('Search results status:', status);
+      console.log('Found restaurants:', results);
+      
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
         const restaurants: Restaurant[] = [];
         const bounds = new google.maps.LatLngBounds();
@@ -222,7 +257,10 @@ export const searchNearbyRestaurants = async (
               category: place.types?.join(', ') || '',
               rating: place.rating,
               photos: place.photos?.map((photo: google.maps.places.PlacePhoto) => photo.getUrl({ maxWidth: 400 })) || [],
-              priceLevel: place.price_level
+              priceLevel: place.price_level,
+              hasDelivery: place.business_status === 'OPERATIONAL',
+              hasDineIn: place.business_status === 'OPERATIONAL',
+              deliveryServices: [] // 这个信息需要通过其他API获取
             });
           } catch (error) {
             console.error('Failed to get place details:', error);
@@ -237,7 +275,8 @@ export const searchNearbyRestaurants = async (
         
         resolve(restaurants);
       } else {
-        reject(new Error('Failed to search restaurants'));
+        console.error('Failed to search restaurants, status:', status);
+        reject(new Error(`Failed to search restaurants: ${status}`));
       }
     });
   });
@@ -269,7 +308,16 @@ const getPlaceDetails = async (
   return new Promise((resolve, reject) => {
     const request: google.maps.places.PlaceDetailsRequest = {
       placeId,
-      fields: ['formatted_address', 'opening_hours', 'website', 'formatted_phone_number']
+      fields: [
+        'formatted_address',
+        'opening_hours',
+        'website',
+        'formatted_phone_number',
+        'business_status',
+        'delivery',
+        'dine_in',
+        'takeout'
+      ]
     };
 
     // 记录请求

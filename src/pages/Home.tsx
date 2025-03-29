@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { SpinWheel } from '../components/SpinWheel/SpinWheel';
 import { SpinWheelItem } from '../types/restaurant';
+import { WheelOption } from '../types/wheelOption';
 
 const HomeContainer = styled.div`
   max-width: 1200px;
@@ -96,46 +97,63 @@ const demoItems: SpinWheelItem[] = [
   { id: '8', name: '韩餐', color: '#E74C3C' },
 ];
 
-export const Home: React.FC = () => {
-  const [selectedItem, setSelectedItem] = React.useState<SpinWheelItem | null>(null);
+// 生成随机颜色
+const getRandomColor = (): string => {
+  const colors = [
+    '#E53935', '#1E88E5', '#43A047', '#FFB300', 
+    '#6D4C41', '#00ACC1', '#9C27B0', '#F4511E',
+    '#3949AB', '#039BE5', '#7CB342', '#FFC107'
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
 
-  const handleSpinEnd = (item: SpinWheelItem) => {
-    setSelectedItem(item);
-    // 滚动到结果区域
-    setTimeout(() => {
-      document.getElementById('result-section')?.scrollIntoView({ behavior: 'smooth' });
-    }, 500);
+export const Home: React.FC = () => {
+  const [selectedRestaurant, setSelectedRestaurant] = React.useState<SpinWheelItem | null>(null);
+  const [restaurants, setRestaurants] = React.useState<SpinWheelItem[]>(demoItems);
+
+  const handleSpinEnd = (option: WheelOption) => {
+    const selectedRestaurant = restaurants.find(r => r.id === option.id);
+    if (selectedRestaurant) {
+      setSelectedRestaurant(selectedRestaurant);
+    }
   };
 
   const handleViewRestaurants = () => {
-    alert(`即将为您查找附近的${selectedItem?.name}餐厅！`);
+    alert(`即将为您查找附近的${selectedRestaurant?.name}餐厅！`);
     // 这里将来会集成地图API，显示附近的餐厅
   };
 
   const handleReset = () => {
-    setSelectedItem(null);
+    setSelectedRestaurant(null);
     // 滚动回顶部
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const wheelOptions = restaurants.map(restaurant => ({
+    id: restaurant.id,
+    label: restaurant.name,
+    weight: 1,
+    color: getRandomColor()
+  }));
 
   return (
     <HomeContainer>
       <Title>今天吃什么？</Title>
       <WheelSection>
-        <SpinWheel items={demoItems} onSpinEnd={handleSpinEnd} />
+        <SpinWheel items={wheelOptions} onSpinEnd={handleSpinEnd} />
       </WheelSection>
-      <ResultContainer id="result-section" $visible={selectedItem !== null}>
-        {selectedItem && (
+      <ResultContainer id="result-section" $visible={selectedRestaurant !== null}>
+        {selectedRestaurant && (
           <>
-            <ResultTitle>指针停在了: {selectedItem.name}</ResultTitle>
+            <ResultTitle>指针停在了: {selectedRestaurant.name}</ResultTitle>
             <ResultDescription>
-              根据转盘结果，今天推荐您尝试 <strong>{selectedItem.name}</strong>！
+              根据转盘结果，今天推荐您尝试 <strong>{selectedRestaurant.name}</strong>！
               <br />
               转盘已经为您做出了选择，不用再纠结啦！
             </ResultDescription>
             <ButtonContainer>
               <Button onClick={handleViewRestaurants}>
-                查看附近的{selectedItem.name}餐厅
+                查看附近的{selectedRestaurant.name}餐厅
               </Button>
               <ResetButton onClick={handleReset}>
                 重新转动

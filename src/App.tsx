@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SpinWheel } from './components/SpinWheel/SpinWheel';
 import { OptionList } from './components/OptionList/OptionList';
 import MapView from './components/MapView/MapView';
-import { WheelOption } from './types/wheel';
+import { WheelOption } from './types/wheelOption';
 import './App.css';
 
 // 初始默认选项
@@ -149,7 +149,7 @@ function App() {
         {/* 中间 - 转盘和结果 */}
         <div className="center-column">
           <SpinWheel 
-            options={options} 
+            items={options} 
             onSpinEnd={handleSpinEnd} 
           />
           

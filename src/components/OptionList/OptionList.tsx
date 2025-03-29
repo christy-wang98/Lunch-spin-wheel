@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { WheelOption } from '../../types/wheel';
+import { WheelOption } from '../../types/wheelOption';
 import styles from './OptionList.module.css';
 
 interface OptionListProps {
@@ -40,7 +40,7 @@ export const OptionList: React.FC<OptionListProps> = ({ options, onOptionsChange
   // 生成不重复的颜色
   const generateUniqueColor = (): string => {
     // 首先尝试从预定义颜色中找一个未使用的
-    const usedColors = options.map(opt => opt.color.toLowerCase());
+    const usedColors = options.map(opt => opt.color?.toLowerCase() || '').filter(Boolean);
     
     // 按照与现有颜色的差异排序预定义颜色
     const availableColors = predefinedColors

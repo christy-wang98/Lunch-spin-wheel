@@ -25,7 +25,7 @@ body {
 .main-content {
   display: flex;
   justify-content: space-between;
-  gap: 40px;
+  gap: 60px;
   width: 100%;
 }
 
@@ -36,6 +36,7 @@ body {
   min-width: 230px;
   display: flex;
   flex-direction: column;
+  order: 0;
 }
 
 /* 中间转盘区域 */
@@ -47,13 +48,15 @@ body {
   gap: 20px;
   max-width: 480px;
   min-width: 340px;
+  order: 1;
 }
 
 /* 右侧地图区域 */
 .right-sidebar {
-  flex: 2.2;
-  max-width: 740px;
+  flex: 2.5;
+  max-width: 900px;
   min-width: 440px;
+  order: 2;
 }
 
 /* 修改地图视图的样式适应右侧边栏 */
@@ -175,12 +178,12 @@ body {
   .main-content {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 30px;
+    gap: 45px;
   }
 
   .center-column {
-    order: -1; /* 确保转盘始终在顶部 */
-    margin-bottom: 20px;
+    order: -1;
+    margin-bottom: 30px;
   }
 
   .left-sidebar, 
@@ -194,6 +197,7 @@ body {
   .main-content {
     flex-direction: column;
     align-items: center;
+    gap: 45px;
   }
 
   .left-sidebar,

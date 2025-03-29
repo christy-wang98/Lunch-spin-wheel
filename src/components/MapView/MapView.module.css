@@ -28,6 +28,7 @@
 .searchGroup {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .searchInput {
@@ -39,12 +40,59 @@
 }
 
 .radiusSelect {
-  width: 100px;
-  padding: 8px;
-  border: 1px solid #ddd;
+  width: 120px;
+  padding: 8px 12px;
+  border: 2px solid #2196F3;
   border-radius: 4px;
   font-size: 14px;
   background-color: #fff;
+  color: #2196F3;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232196F3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+.radiusSelect:hover {
+  background-color: #E3F2FD;
+}
+
+.radiusSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.modeSelect {
+  width: 120px;
+  padding: 8px 12px;
+  border: 2px solid #4CAF50;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #4CAF50;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234CAF50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+.modeSelect:hover {
+  background-color: #E8F5E9;
+}
+
+.modeSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
 }
 
 .searchButton, .addButton {
@@ -105,6 +153,13 @@
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #ddd;
+  position: relative;
+}
+
+/* 确保地图占满容器 */
+.mapContainer > div {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .restaurantList {
@@ -221,13 +276,32 @@
   font-size: 16px;
 }
 
+.deliveryBadge, .dineInBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: normal;
+  color: white;
+}
+
+.deliveryBadge {
+  background-color: #FF9800;
+}
+
+.dineInBadge {
+  background-color: #4CAF50;
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
   .searchGroup {
     flex-direction: column;
   }
   
-  .radiusSelect {
+  .radiusSelect,
+  .modeSelect {
     width: 100%;
   }
   
