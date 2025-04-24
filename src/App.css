@@ -70,7 +70,7 @@ h1, h2, h3, h4, h5, h6, .title {
   max-width: 480px;
   min-width: 340px;
   order: 1;
-  padding-left: 50px;
+  /* padding-left: 50px; */
 }
 
 /* 右侧地图区域 */
@@ -79,6 +79,7 @@ h1, h2, h3, h4, h5, h6, .title {
   /* max-width: 900px;
   min-width: 440px; */
   order: 2;
+  height: 700px;
 }
 
 /* 修改地图视图的样式适应右侧边栏 */
@@ -128,6 +129,8 @@ h1, h2, h3, h4, h5, h6, .title {
 }
 
 .buttons-container {
+  position: relative;
+  left: 22px;
   display: flex;
   gap: 15px;
   margin-top: 15px;
