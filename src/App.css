@@ -24,7 +24,7 @@ td {
 }
 
 .app {
-  max-width: 1600px;
+  max-width: 2100px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
@@ -38,7 +38,7 @@ td {
 
 /* 通用标题样式 - 确保所有标题使用一致的文本格式 */
 h1, h2, h3, h4, h5, h6, .title {
-  margin-bottom: 15px;
+  margin-bottom: 80px;
   color: #333;
 }
 
@@ -53,8 +53,8 @@ h1, h2, h3, h4, h5, h6, .title {
 /* 左侧选项列表 */
 .left-sidebar {
   flex: 1;
-  max-width: 350px;
-  min-width: 300px;
+  max-width: 500px;
+  min-width: 320px;
   display: flex;
   flex-direction: column;
   order: 0;
@@ -70,20 +70,21 @@ h1, h2, h3, h4, h5, h6, .title {
   max-width: 480px;
   min-width: 340px;
   order: 1;
+  padding-left: 50px;
 }
 
 /* 右侧地图区域 */
 .right-sidebar {
   flex: 2.5;
-  max-width: 900px;
-  min-width: 440px;
+  /* max-width: 900px;
+  min-width: 440px; */
   order: 2;
 }
 
 /* 修改地图视图的样式适应右侧边栏 */
 .right-sidebar > div {
   margin-top: 0;
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
 }
 
@@ -131,7 +132,7 @@ h1, h2, h3, h4, h5, h6, .title {
   gap: 15px;
   margin-top: 15px;
   width: 100%;
-  max-width: 400px;
+  /* max-width: 400px; */
   justify-content: center;
 }
 
@@ -198,12 +199,12 @@ h1, h2, h3, h4, h5, h6, .title {
 @media (max-width: 1400px) {
   .main-content {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
     gap: 45px;
   }
 
   .center-column {
-    order: -1;
+    /* order: -1; */
     margin-bottom: 30px;
   }
 
@@ -211,21 +212,31 @@ h1, h2, h3, h4, h5, h6, .title {
   .right-sidebar {
     flex: 1 1 45%;
     min-width: 320px;
+    padding-right: 40px;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: center;
     gap: 45px;
   }
 
-  .left-sidebar,
-  .center-column,
+  .left-sidebar {
+    max-width: 90%;
+    width: 90%;
+    order: 1;
+    padding-right: 30px;
+  }
+  .center-column {
+    padding-left: 0px;
+  }
   .right-sidebar {
     max-width: 550px;
-    width: 100%;
+    width: 90%;
+    padding-right: 30px;  
+    
   }
 }
 
