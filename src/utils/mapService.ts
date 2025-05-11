@@ -423,4 +423,61 @@ const getPopularDishes = (restaurantName: string): string[] => {
   }
   
   return selectedDishes;
+};
+
+/**
+ * 将地址转换为地理坐标
+ * @param mapInstance 地图实例
+ * @param address 地址字符串
+ * @returns 位置信息，包括经纬度和格式化地址
+ */
+export const geocodeAddress = async (
+  mapInstance: MapInstance,
+  address: string
+): Promise<{
+  position: { lat: number; lng: number };
+  formattedAddress: string;
+}> => {
+  // 检查是否可以发送请求
+  if (!rateLimiter.canMakeRequest('geocode')) {
+    const waitTime = rateLimiter.getTimeToNextWindow('geocode');
+    throw new Error(`请求过于频繁，请等待 ${Math.ceil(waitTime / 1000)} 秒后重试`);
+  }
+
+  // 检查缓存
+  const cacheKey = `geocode:${address}`;
+  const cachedResult = cacheService.get<{
+    position: { lat: number; lng: number };
+    formattedAddress: string;
+  }>(cacheKey);
+  
+  if (cachedResult) {
+    return cachedResult;
+  }
+
+  return new Promise((resolve, reject) => {
+    // 记录请求
+    rateLimiter.logRequest('geocode');
+
+    const geocoder = new google.maps.Geocoder();
+    
+    geocoder.geocode({ address }, (results, status) => {
+      if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+        const firstResult = results[0];
+        const position = {
+          lat: firstResult.geometry.location.lat(),
+          lng: firstResult.geometry.location.lng()
+        };
+        const formattedAddress = firstResult.formatted_address;
+        
+        // 缓存结果
+        const result = { position, formattedAddress };
+        cacheService.set(cacheKey, result);
+        
+        resolve(result);
+      } else {
+        reject(new Error(`Geocoding failed: ${status}`));
+      }
+    });
+  });
 }; 

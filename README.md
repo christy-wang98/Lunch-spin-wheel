@@ -14,6 +14,9 @@ A fun and interactive web application that helps you and your team decide where 
 - **Interactive Spin Wheel**: Beautiful animation with sound effects and result highlighting
 - **互动式转盘**: 精美动画，配有音效和结果高亮显示
 
+- **Location Flexibility**: Use your current location or search any custom location for restaurant recommendations
+- **位置灵活性**: 使用您的当前位置或搜索任何自定义位置以获取餐厅推荐
+
 - **Google Maps Integration**: Search for nearby restaurants and add them directly to your wheel
 - **Google地图集成**: 搜索附近餐厅并直接添加到转盘中
 
@@ -127,6 +130,13 @@ The build output will be in the `dist` directory.
 2. Select restaurants you're interested in
 3. Click "Add to Wheel" to add them as options
 
+### Searching Different Locations 搜索不同位置
+
+1. Select "Enter a custom location" in the map section
+2. Type any address, city, or place name
+3. Click "Find Location" to search restaurants in that area
+4. You can also switch back to your current location at any time
+
 ### Adjusting Option Weight 调整选项权重
 
 1. Use the number input next to each option to change its weight
@@ -146,6 +156,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📞 Contact 联系方式
 
-Christy Wang - christy.wang98@example.com
+Christy Wang - christychu28@gmail.com
 
 Project Link: [https://github.com/christy-wang98/Lunch-spin-wheel](https://github.com/christy-wang98/Lunch-spin-wheel)

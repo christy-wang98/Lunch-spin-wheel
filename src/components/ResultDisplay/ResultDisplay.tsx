@@ -1,5 +1,4 @@
 import React from 'react';
-import { ResultDisplayProps } from '../../types/wheel';
 import styles from './ResultDisplay.module.css';
 import { useTranslation } from 'react-i18next';
 

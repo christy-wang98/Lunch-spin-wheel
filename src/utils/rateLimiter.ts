@@ -6,7 +6,8 @@ class RateLimiter {
   private readonly LIMITS = {
     maps: 50,      // 每分钟50次地图加载
     places: 30,    // 每分钟30次地点搜索
-    geocoding: 20  // 每分钟20次地理编码
+    geocoding: 20,  // 每分钟20次地理编码
+    geocode: 20     // 每分钟20次地理编码
   };
 
   private constructor() {

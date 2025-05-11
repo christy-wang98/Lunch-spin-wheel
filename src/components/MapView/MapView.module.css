@@ -365,4 +365,54 @@
 
 .restaurants::-webkit-scrollbar-thumb:hover {
   background: #9e9e9e;
+}
+
+/* 位置控制相关样式 */
+.locationControls {
+  margin-bottom: 15px;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.locationTypeSelector {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.locationTypeLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.locationTypeLabel input {
+  margin-right: 6px;
+}
+
+.customAddressContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.addressInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.currentLocationDisplay {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #555;
+  background-color: #e3f2fd;
+  padding: 6px 10px;
+  border-radius: 4px;
+  word-break: break-word;
 } 
