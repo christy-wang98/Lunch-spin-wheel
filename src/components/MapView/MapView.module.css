@@ -166,6 +166,8 @@
 .restaurantList {
   border-top: 1px solid #eee;
   padding-top: 12px;
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .restaurantList h4 {
